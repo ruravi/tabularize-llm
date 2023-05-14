@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "name": "Tabularize",
+    "description": "Groups your open browser tabs automatically and applies smart labels",
+    "version": "1.0",
+    "action": {
+        "default_popup": "hello.html",
+        "default_icon": "logo.png"
+    }
+}
