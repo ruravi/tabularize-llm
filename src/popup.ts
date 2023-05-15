@@ -1,3 +1,5 @@
+import { generateGroupList } from "./group_tabs"
+
 const tabs = await chrome.tabs.query({
     url: "<all_urls>"
 });
@@ -31,3 +33,5 @@ button.addEventListener("click", async () => {
     const group = await chrome.tabs.group({ tabIds });
     await chrome.tabGroups.update(group, { title: "DOCS" });
 });
+
+document.querySelector(".model-output").textContent = await generateGroupList();
