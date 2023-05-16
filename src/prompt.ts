@@ -1,18 +1,10 @@
-import { array, object, number, string, ZodTypeAny } from 'zod';
 import { PromptTemplate } from "langchain/prompts";
 import { StructuredOutputParser } from "langchain/output_parsers";
+import { output_schema, mapCategoryToIds } from "./output_schema";
 const jsonStringify = require("json-stringify");
 
-// We can use zod to define a schema for the output using the `fromZodSchema` method of `StructuredOutputParser`.
 const output_parser = StructuredOutputParser.fromZodSchema(
-    array(
-        object({
-            id: number().describe("id of this entry. This is the same as in the input array"),
-            title: string().describe("title of the website"),
-            url: string().describe("url of the website"),
-            category: string().describe("category of the website"),
-        })
-    ));
+    output_schema);
 
 const formatInstructions = output_parser.getFormatInstructions();
 
@@ -32,5 +24,6 @@ export async function get_prompt(input: object) {
 
 export async function parse_output(output: string) {
     // TODO: add error handling
-    return await output_parser.parse(output);
+    const parsed_output = await output_parser.parse(output);
+    return mapCategoryToIds(parsed_output);
 }

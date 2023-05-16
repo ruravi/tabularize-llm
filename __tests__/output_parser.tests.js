@@ -1,6 +1,8 @@
-const { parse_output } = require('../src/prompt'); // Import the function to be tested
+import { mapCategoryToIds } from '../src/output_schema';
+const { parse_output } = require('../src/prompt');
+// Import the function to be tested
 
-describe('mapCategoryToIds', () => {
+describe('parse', () => {
   test('should map objects to categories correctly', async () => {
     const sample_output = `[
             {
@@ -164,5 +166,39 @@ describe('mapCategoryToIds', () => {
     const result = await parse_output(sample_output)
 
     expect(result.length).toBe(26)
+
+    const actual_category_map = mapCategoryToIds(result)
+    // print actual_category_map
+
+    expect(actual_category_map.get('AI Platform')).toEqual([112108065])
+    expect(actual_category_map.get('Chrome Extension Development')).toEqual([112107928, 112107895, 112107813, 112107739, 112107931])
+    expect(actual_category_map.get('Cloud Storage')).toEqual([112107544])
+    expect(actual_category_map.get('Cooking')).toEqual([112108090])
+    expect(actual_category_map.get('Education')).toEqual([112107689])
+    expect(actual_category_map.get('Email')).toEqual([112107540])
+    expect(actual_category_map.get('Event')).toEqual(expect.arrayContaining([112108148, 112108073]))
+    expect(actual_category_map.get('Hackathon')).toEqual([112108145])
+    expect(actual_category_map.get('Machine Learning')).toEqual([112107768])
+    expect(actual_category_map.get('Node.js')).toEqual([112107915])
+    expect(actual_category_map.get('Programming')).toEqual(expect.arrayContaining([112108096, 112107900, 112107924, 112108155]))
+  });
+});
+
+describe('mapCategoryToIds', () => {
+  test('should map objects to categories correctly', () => {
+    const objects = [
+      { id: 1, category: 'A' },
+      { id: 2, category: 'B' },
+      { id: 3, category: 'A' },
+      { id: 4, category: 'C' },
+      { id: 5, category: 'B' },
+    ];
+
+    const result = mapCategoryToIds(objects);
+
+    // Assert expected output
+    expect(result.get('A')).toEqual([1, 3]);
+    expect(result.get('B')).toEqual([2, 5]);
+    expect(result.get('C')).toEqual([4]);
   });
 });
