@@ -34,4 +34,5 @@ button.addEventListener("click", async () => {
     await chrome.tabGroups.update(group, { title: "DOCS" });
 });
 
-document.querySelector(".model-output").textContent = await generateGroupList();
+const tab_groups = await generateGroupList(tabs);
+document.querySelector(".model-output").textContent = tab_groups;
