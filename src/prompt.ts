@@ -7,7 +7,7 @@ const jsonStringify = require("json-stringify");
 const output_parser = StructuredOutputParser.fromZodSchema(
     array(
         object({
-            index: number().describe("index of this entry in the input array"),
+            id: number().describe("id of this entry. This is the same as in the input array"),
             title: string().describe("title of the website"),
             url: string().describe("url of the website"),
             category: string().describe("category of the website"),
