@@ -1,4 +1,4 @@
-import { generateGroupList } from "./group_tabs"
+import { groupTabs } from "./group_tabs"
 
 const tabs = await chrome.tabs.query({
     url: "<all_urls>"
@@ -29,10 +29,5 @@ document.querySelector("ul").append(...elements);
 
 const button = document.querySelector("button");
 button.addEventListener("click", async () => {
-    const tabIds = tabs.map(({ id }) => id);
-    const group = await chrome.tabs.group({ tabIds });
-    await chrome.tabGroups.update(group, { title: "DOCS" });
+    await groupTabs(tabs);
 });
-
-const tab_groups = await generateGroupList(tabs);
-document.querySelector(".model-output").textContent = tab_groups;
