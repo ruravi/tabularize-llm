@@ -1,6 +1,7 @@
-import { array, object, number, string } from 'zod';
+import { array, object, number, string, ZodTypeAny } from 'zod';
 import { PromptTemplate } from "langchain/prompts";
 import { StructuredOutputParser } from "langchain/output_parsers";
+const jsonStringify = require("json-stringify");
 
 // We can use zod to define a schema for the output using the `fromZodSchema` method of `StructuredOutputParser`.
 const output_parser = StructuredOutputParser.fromZodSchema(
@@ -22,9 +23,14 @@ const prompt = new PromptTemplate({
     partialVariables: { format_instructions: formatInstructions },
 });
 
-export async function get_prompt(input_json: string) {
-    const input = await prompt.format({
+export async function get_prompt(input: object) {
+    const input_json = jsonStringify(input)
+    return await prompt.format({
         question: input_json,
     });
-    return input
+}
+
+export async function parse_output(output: string) {
+    // TODO: add error handling
+    return await output_parser.parse(output);
 }
