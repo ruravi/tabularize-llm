@@ -2,17 +2,23 @@ import { groupTabsEndToEnd } from "./group_tabs"
 import '../styles/popup.scss';
 import { clearAll } from "./storage";
 
-const tabs = await chrome.tabs.query({
-    url: "<all_urls>"
-});
-
-// Remove tabs that already have a group.
-const ungrouped_tabs = tabs.filter((tab) => tab.groupId == -1)
-
 const groupButton = document.querySelector("#groupTabs");
 groupButton.addEventListener("click", async () => {
-    // TODO: Add a spinner when processing.
-    await groupTabsEndToEnd(ungrouped_tabs);
+    // Show a spinner when processing.
+    document.getElementById("loading").style.display = "block";
+
+    const tabs = await chrome.tabs.query({
+        url: "<all_urls>"
+    });
+    
+    // Remove tabs that already have a group.
+    const ungrouped_tabs = tabs.filter((tab) => tab.groupId == -1)
+    if (ungrouped_tabs.length > 0) {
+        await groupTabsEndToEnd(ungrouped_tabs);
+    }
+    
+    // Hide the spinner
+    document.getElementById("loading").style.display = "none";
 });
 
 const debugCheckbox = document.getElementById("debugCheckbox");
