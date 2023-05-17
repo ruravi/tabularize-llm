@@ -18,9 +18,14 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      fs: false, // or provide a polyfill if necessary
-      path: require.resolve('path-browserify'),
-      os: require.resolve("os-browserify/browser")
+      "fs": false, // or provide a polyfill if necessary
+      "path": require.resolve('path-browserify'),
+      "os": require.resolve("os-browserify/browser"),
+      "crypto": false,
+      "util": false,
+      "assert": false,
+      "stream": false,
+      "worker_threads": false,
     },
   },
   module: {

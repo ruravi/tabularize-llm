@@ -30,8 +30,16 @@ document.querySelector("ul").append(...elements);
 // Remove tabs that already have a group.
 const ungrouped_tabs = tabs.filter((tab) => tab.groupId !== -1)
 
-const button = document.querySelector("button");
-button.addEventListener("click", async () => {
+const groupButton = document.querySelector("#groupTabs");
+groupButton.addEventListener("click", async () => {
     // TODO: Add a spinner when processing.
     await groupTabs(ungrouped_tabs);
+});
+
+const debugButton = document.querySelector("#debugButton");
+debugButton.addEventListener("click", async () => {
+    // Read contents of chrome storage.
+    chrome.storage.local.get(null, (items) => {
+        document.querySelector("#debugOutputP").textContent = JSON.stringify(items);
+    });
 });

@@ -28,4 +28,20 @@ export async function groupTabs(tabs: chrome.tabs.Tab[]) {
         // Set the group title to the category name.
         await chrome.tabGroups.update(group, { title: category });
     }
+    saveGroupings(categoryMap)
+}
+
+// Save the groupings to the db chrome.storage
+export function saveGroupings(groupInfo: Map<string, number[]>) {
+    // Save the groupings to chrome.storage.
+    // Create a key for each category
+    for (const [category, tabIds] of groupInfo) {
+        chrome.storage.local.set({ [category]: tabIds }, () => {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError);
+              } else {
+                console.log('Data saved successfully!');
+              }
+        });
+    }
 }
