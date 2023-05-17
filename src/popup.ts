@@ -27,7 +27,11 @@ for (const tab of tabs) {
 }
 document.querySelector("ul").append(...elements);
 
+// Remove tabs that already have a group.
+const ungrouped_tabs = tabs.filter((tab) => tab.groupId !== -1)
+
 const button = document.querySelector("button");
 button.addEventListener("click", async () => {
-    await groupTabs(tabs);
+    // TODO: Add a spinner when processing.
+    await groupTabs(ungrouped_tabs);
 });
