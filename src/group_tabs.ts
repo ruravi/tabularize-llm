@@ -29,10 +29,11 @@ export async function groupTabs(tabs: chrome.tabs.Tab[]) {
         await chrome.tabGroups.update(group, { title: category });
     }
     saveGroupings(categoryMap)
+    markGroupingsDone()
 }
 
 // Save the groupings to the db chrome.storage
-export function saveGroupings(groupInfo: Map<string, number[]>) {
+function saveGroupings(groupInfo: Map<string, number[]>) {
     // Save the groupings to chrome.storage.
     // Create a key for each category
     for (const [category, tabIds] of groupInfo) {
@@ -44,4 +45,14 @@ export function saveGroupings(groupInfo: Map<string, number[]>) {
               }
         });
     }
+}
+
+function markGroupingsDone() {
+    chrome.storage.local.set({ ["groupings_done"]: true }, () => {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+          } else {
+            console.log('Data saved successfully!');
+          }
+    });
 }
