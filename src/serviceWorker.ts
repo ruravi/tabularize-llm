@@ -1,3 +1,7 @@
+import { queryCategories, queryCategory, saveGrouping } from "./storage";
+import { get_model_response_for_recategorize } from "./language_model";
+import { categorize_tabs_new, categorize_existing } from "./group_tabs";
+
 // Install the service worker
 self.addEventListener('install', event => {
   console.log('Service worker installed:', event);
@@ -17,18 +21,38 @@ self.addEventListener('activate', event => {
   })
 });
 
-function recategorize() {
-  console.log('Recategorizing')
+async function recategorize(tab: chrome.tabs.Tab) {
+  console.log(`Recategorizing: ${tab.url}`)
+  // Read from local storage all the category keys.
+  const existingCategories = await queryCategories()
+  // Ask the model for the category for this new web page
+  const response = await get_model_response_for_recategorize({ id: tab.id, url: tab.url, title: tab.title }, existingCategories)
+  // Update the local storage with the new category if there is a new one.
+  console.log(`Parsed response: ${JSON.stringify(response)}`)
+  
+  if (!existingCategories.includes(response[0].category)) {
+    console.log('New category')
+
+    // Set the category for the tab
+    const newGroupId = await categorize_tabs_new([tab.id], response[0].category)
+    saveGrouping(response[0].category, newGroupId)
+
+  } else {
+    console.log('Existing category')
+    // Add this tab id to the existing category value
+    const existingGroupId = await queryCategory(response[0].category)
+    await categorize_existing(tab.id, existingGroupId)
+  }
 }
 
-const tabUpdatedListener = function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void {
+const tabUpdatedListener = async function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void {
   // If the tab is updated and the url is changed then execute the code
   if (changeInfo.url) {
     // Do your stuff here
     console.log(changeInfo.url);
     // We need to re-categorize the page
     if (changeInfo.url !== "chrome://newtab/") {
-      recategorize();
+      await recategorize(tab);
     }
   }
 };

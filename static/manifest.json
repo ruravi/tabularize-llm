@@ -19,6 +19,7 @@
         "<all_urls>"
     ],
     "background": {
-        "service_worker": "serviceWorker.js"
+        "service_worker": "serviceWorker.js",
+        "type": "module"
     }
 }
