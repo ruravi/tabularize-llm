@@ -1,13 +1,13 @@
 @import 'normalize.css';
 
 body {
-  background-color: #292d3e;
-  color: #ffffff;
+  background-color: #F0F8FF;
+  color: #2F4F4F;
   margin: 10px;
 }
 
 button {
-  background-color: #4caf50;
+  background-color: #00BFFF;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -17,10 +17,10 @@ button {
 }
 
 button:hover {
-  background-color: #3e8e41;
+  background-color: #4682B4;
 }
 
-#debugButton {
+#debugCheckbox {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -28,7 +28,7 @@ button:hover {
   padding: 5px 10px;
 }
 
-#debugButton img {
+#debugCheckbox img {
   width: 16px;
   height: 16px;
 }
