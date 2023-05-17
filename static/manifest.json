@@ -17,5 +17,8 @@
     ],
     "host_permissions": [
         "<all_urls>"
-    ]
+    ],
+    "background": {
+        "service_worker": "serviceWorker.js"
+    }
 }
