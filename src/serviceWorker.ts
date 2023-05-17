@@ -9,12 +9,10 @@ self.addEventListener('install', event => {
 // Activate the service worker
 self.addEventListener('activate', event => {
   console.log('Service worker activated:', event);
-  chrome.storage.local.get(null, (items) => {
-    console.log(JSON.stringify(items));
-  });
 
   chrome.storage.local.get("groupings_done", (value) => {
     if (value) {
+      console.log('Listener triggered')
       chrome.tabs.onUpdated.addListener(tabUpdatedListener);
     }
   })
@@ -71,6 +69,7 @@ chrome.storage.onChanged.addListener((changes) => {
     }
     // If value is false remove the event listener
     else {
+      console.log('Removing listener')
       chrome.tabs.onUpdated.removeListener(tabUpdatedListener);
     }
   }
