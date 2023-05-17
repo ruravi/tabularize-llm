@@ -1,5 +1,5 @@
 import { get_model_response_for_recategorize } from "./language_model";
-import { categorize_tabs_new, categorize_existing, getAllTabGroups, queryCategory } from "./group_tabs";
+import { categorize_tabs_new, categorize_existing, getAllTabGroups } from "./group_tabs";
 
 // Install the service worker
 self.addEventListener('install', event => {
@@ -23,22 +23,26 @@ self.addEventListener('activate', event => {
 async function recategorize(tab: chrome.tabs.Tab) {
   console.log(`Recategorizing: ${tab.url}`)
   // Read from local storage all the category keys.
-  const existingCategories = Object.keys(await getAllTabGroups())
+  const existingCategories = await getAllTabGroups()
+  console.log(`Existing categories: ${existingCategories}`)
   // Ask the model for the category for this new web page
-  const response = await get_model_response_for_recategorize({ id: tab.id, url: tab.url, title: tab.title }, existingCategories)
+  const response = await get_model_response_for_recategorize(
+    { id: tab.id, url: tab.url, title: tab.title },
+    Array.from(existingCategories.keys()))
   // Update the local storage with the new category if there is a new one.
   console.log(`Parsed response: ${JSON.stringify(response)}`)
-  
-  if (!existingCategories.includes(response[0].category)) {
+  const assignedCategory = response[0].category
+
+  if (!existingCategories.has(assignedCategory)) {
     console.log('New category')
 
     // Set the category for the tab
-    const newGroupId = await categorize_tabs_new([tab.id], response[0].category)
+    await categorize_tabs_new([tab.id], assignedCategory)
 
   } else {
     console.log('Existing category')
     // Add this tab id to the existing category value
-    const existingGroupId = await queryCategory(response[0].category)
+    const existingGroupId = existingCategories.get(assignedCategory)
     await categorize_existing(tab.id, existingGroupId)
   }
 }
@@ -46,11 +50,11 @@ async function recategorize(tab: chrome.tabs.Tab) {
 const tabUpdatedListener = async function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo,
   tab: chrome.tabs.Tab) {
   // If the tab is updated and the url is changed then execute the code
-  if (changeInfo.url) {
+  if (changeInfo.url || changeInfo.title) {
     // Do your stuff here
-    console.log(changeInfo.url);
+    console.log(changeInfo.title);
     // We need to re-categorize the page
-    if (changeInfo.url !== "chrome://newtab/") {
+    if (changeInfo.url !== "chrome://newtab/" && changeInfo.title && !changeInfo.title.startsWith("http")) {
       await recategorize(tab);
     }
   }

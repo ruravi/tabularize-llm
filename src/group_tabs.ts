@@ -48,15 +48,10 @@ export async function categorize_existing(tabId: number, groupId: number) {
 
 export async function getAllTabGroups(): Promise<Map<string, number>> {
     const groups = await chrome.tabGroups.query({})
+    // Convert the groups to a map of title to group id.
     const groupMap = new Map<string, number>()
-    groups.forEach(group => {
+    groups.forEach((group: chrome.tabGroups.TabGroup) => {
         groupMap.set(group.title, group.id)
     })
     return groupMap
 }
-
-export async function queryCategory(category: string): Promise<number> {
-    const groupMap = await getAllTabGroups()
-    return groupMap.get(category)
-}
-
