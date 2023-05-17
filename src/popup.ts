@@ -1,5 +1,6 @@
 import { groupTabs } from "./group_tabs"
 import '../styles/popup.scss';
+import { clearAll } from "./storage";
 
 const tabs = await chrome.tabs.query({
     url: "<all_urls>"
@@ -44,4 +45,9 @@ debugCheckbox.addEventListener("change", async (event) => {
     chrome.storage.local.get(null, (items) => {
         document.getElementById("debugMessage").textContent = JSON.stringify(items);
     });
+});
+
+document.getElementById("clearStorage").addEventListener("click", async () => {
+    clearAll();
+    document.getElementById("debugMessage").textContent = "Storage cleared";
 });
