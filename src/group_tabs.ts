@@ -1,5 +1,5 @@
 import { get_model_response } from "./language_model"
-import { saveGrouping, markGroupingsDone } from "./storage"
+import { markGroupingsDone } from "./storage"
 
 
 // A helper function to generate a tab grouping list.
@@ -23,7 +23,6 @@ export async function groupTabsEndToEnd(tabs: chrome.tabs.Tab[]) {
     // For each category, create a group and add the tabs to it.
     for (const [category, tabIds] of categoryMap.entries()) {
         const groupId = await categorize_tabs_new(tabIds, category)
-        saveGrouping(category, groupId)
     }
     // Finally, add a special key to make that the initial groupings are complete.
     markGroupingsDone()
@@ -45,5 +44,19 @@ export async function categorize_existing(tabId: number, groupId: number) {
         tabIds: tabId,
         groupId: groupId,
     });
+}
+
+export async function getAllTabGroups(): Promise<Map<string, number>> {
+    const groups = await chrome.tabGroups.query({})
+    const groupMap = new Map<string, number>()
+    groups.forEach(group => {
+        groupMap.set(group.title, group.id)
+    })
+    return groupMap
+}
+
+export async function queryCategory(category: string): Promise<number> {
+    const groupMap = await getAllTabGroups()
+    return groupMap.get(category)
 }
 

@@ -1,6 +1,5 @@
-import { queryCategories, queryCategory, saveGrouping } from "./storage";
 import { get_model_response_for_recategorize } from "./language_model";
-import { categorize_tabs_new, categorize_existing } from "./group_tabs";
+import { categorize_tabs_new, categorize_existing, getAllTabGroups, queryCategory } from "./group_tabs";
 
 // Install the service worker
 self.addEventListener('install', event => {
@@ -24,7 +23,7 @@ self.addEventListener('activate', event => {
 async function recategorize(tab: chrome.tabs.Tab) {
   console.log(`Recategorizing: ${tab.url}`)
   // Read from local storage all the category keys.
-  const existingCategories = await queryCategories()
+  const existingCategories = Object.keys(await getAllTabGroups())
   // Ask the model for the category for this new web page
   const response = await get_model_response_for_recategorize({ id: tab.id, url: tab.url, title: tab.title }, existingCategories)
   // Update the local storage with the new category if there is a new one.
@@ -35,7 +34,6 @@ async function recategorize(tab: chrome.tabs.Tab) {
 
     // Set the category for the tab
     const newGroupId = await categorize_tabs_new([tab.id], response[0].category)
-    saveGrouping(response[0].category, newGroupId)
 
   } else {
     console.log('Existing category')
@@ -45,7 +43,8 @@ async function recategorize(tab: chrome.tabs.Tab) {
   }
 }
 
-const tabUpdatedListener = async function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void {
+const tabUpdatedListener = async function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo,
+  tab: chrome.tabs.Tab) {
   // If the tab is updated and the url is changed then execute the code
   if (changeInfo.url) {
     // Do your stuff here
