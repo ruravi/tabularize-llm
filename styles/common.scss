@@ -5,6 +5,29 @@ body {
   color: #ffffff;
 }
 
+button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#debugButton {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+#debugButton img {
+  width: 16px;
+  height: 16px;
+}
+
 .input-group {
   display: flex;
 

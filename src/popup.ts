@@ -28,7 +28,7 @@ for (const tab of tabs) {
 document.querySelector("ul").append(...elements);
 
 // Remove tabs that already have a group.
-const ungrouped_tabs = tabs.filter((tab) => tab.groupId !== -1)
+const ungrouped_tabs = tabs.filter((tab) => tab.groupId == -1)
 
 const groupButton = document.querySelector("#groupTabs");
 groupButton.addEventListener("click", async () => {
@@ -36,10 +36,11 @@ groupButton.addEventListener("click", async () => {
     await groupTabs(ungrouped_tabs);
 });
 
-const debugButton = document.querySelector("#debugButton");
-debugButton.addEventListener("click", async () => {
+const debugCheckbox = document.getElementById("debugCheckbox");
+debugCheckbox.addEventListener("change", async (event) => {
+    document.getElementById('debugMessage').style.display = event.target.checked ? 'block' : 'none';
     // Read contents of chrome storage.
     chrome.storage.local.get(null, (items) => {
-        document.querySelector("#debugOutputP").textContent = JSON.stringify(items);
+        document.getElementById("debugMessage").textContent = JSON.stringify(items);
     });
 });

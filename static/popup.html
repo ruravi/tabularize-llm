@@ -18,14 +18,21 @@
         </li>
     </template>
 
-    <h1>Tabularize LLM</h1>
-    <button id="groupTabs">Group Tabs</button>
-    <button id="debugButton">Debug</button>
-    <h2>Debug Output</h2>
-    <p id="debugOutputP"></p>
-    <p class="model-output"></p>
-    <ul></ul>
-
+    <header>
+        <h1>Tabularize LLM</h1>
+    </header>
+    <main>
+        <button id="groupTabs">Group Tabs</button>
+        <ul></ul>
+    </main>
+    <footer>
+        <label for="debugCheckbox" id="debugLabel">
+            <img src="bug-icon.png" alt="Bug Icon">
+            Debug
+            <input type="checkbox" id="debugCheckbox">
+        </label>
+        <p id="debugMessage" style="display: none; color: grey;">Debug message</p>
+    </footer>
     <script src="popup.js" type="module"></script>
 </body>
 
