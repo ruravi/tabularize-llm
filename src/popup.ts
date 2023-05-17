@@ -1,4 +1,5 @@
 import { groupTabs } from "./group_tabs"
+import '../styles/popup.scss';
 
 const tabs = await chrome.tabs.query({
     url: "<all_urls>"
