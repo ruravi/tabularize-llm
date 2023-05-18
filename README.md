@@ -7,6 +7,8 @@ Say hello to TabularizeLLM, a friendly little Chrome extension that you can add 
 
 Once these categories are in place, every new tab you open is like a guest at a party. Our extension, working quietly in the background, greets each one, determines which category it fits into best, and shows it to its place. If a tab is a bit unique and doesn't quite fit in with the existing categories, no worries! TabularizeLLM simply rolls out the red carpet and creates a new category just for it.
 
+![Alt text](/screenshots/sample.png "Optional title")
+
 ## How I built it
 
 The most fascinating aspect of this project is the AI wizardry that suggests categories for browser tabs. I began by using just the title and URL as input data. Surprisingly, this alone provided pretty impressive results in my experiments. I utilized a JavaScript AI library called langchain to create prompts, issue API calls to an LLM provider, and parse the LLM's output.
