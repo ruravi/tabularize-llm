@@ -12,7 +12,7 @@ self.addEventListener('activate', event => {
 
   chrome.storage.local.get("groupings_done", (value) => {
     if (value) {
-      console.log('Listener triggered')
+      console.log('Adding tab updated listener')
       chrome.tabs.onUpdated.addListener(tabUpdatedListener);
     }
   })

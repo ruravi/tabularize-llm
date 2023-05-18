@@ -13,7 +13,6 @@ const model = new ChatOpenAI({
 
 export async function get_model_response(input: object) {
     const prompt = await get_prompt(input)
-    console.log(prompt)
     const response = await model.call([
         new HumanChatMessage(prompt)
     ])
@@ -23,7 +22,6 @@ export async function get_model_response(input: object) {
 
 export async function get_model_response_for_recategorize(input: object, existingCategories: string[]): Promise<z.infer<typeof output_schema>> {
     const prompt = await get_recategorize_prompt(input, existingCategories)
-    console.log(prompt)
     const response = await model.call([
         new HumanChatMessage(prompt)
     ])
